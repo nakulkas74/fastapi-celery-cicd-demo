@@ -71,4 +71,12 @@ jobs:
         run: |
           FASTAPI_PORT=$(grep "^FASTAPI_PORT=" .env | cut -d '=' -f2)
           echo "::set-output name=port::$FASTAPI_PORT"
-          
+
+      - name: Get server IP
+        run: |
+          SERVER_IP=$(curl -s icanhazip.com)
+          echo "::set-output name=server_ip::$SERVER_IP"
+
+      - name: Echo Full URL of FastAPI App
+        run: |
+          echo "http://${{ steps.server_ip.outputs.server_ip }}:${{ steps.read-port-variable.outputs.port }}"
