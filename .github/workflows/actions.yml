@@ -3,16 +3,16 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main
+      - main 
 
 jobs:
   build-and-push-ecr-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
     
-    steps:
+    steps:  
       - name: Checkout
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v2    
+        
       - name: Setup AWS ECR Details
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -71,6 +71,14 @@ jobs:
         run: |
           FASTAPI_PORT=$(grep "^FASTAPI_PORT=" .env | cut -d '=' -f2)
           echo "FASTAPI_PORT=${FASTAPI_PORT}" >> $GITHUB_ENV
+
+      - name: Run FastAPI Container
+        run: |
+          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} -p ${{ env.FASTAPI_PORT }}:80 --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
+
+      - name: Run Celery Container
+        run: |
+          docker run -d --name ${{ secrets.CELERY_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest celery
 
       - name: Get server IP
         id: get-server-ip
