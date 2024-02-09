@@ -3,16 +3,16 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   build-and-push-ecr-image:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
     
-    steps:  
+    steps:
       - name: Checkout
-        uses: actions/checkout@v2    
-        
+        uses: actions/checkout@v2
+      
       - name: Setup AWS ECR Details
         uses: aws-actions/configure-aws-credentials@v1
         with:
