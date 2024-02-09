@@ -2,6 +2,7 @@ from celery_config import celery_app
 
 import redis
 import time
+import os
 from celery.result import AsyncResult
 from dotenv import load_dotenv
 load_dotenv('.env')
