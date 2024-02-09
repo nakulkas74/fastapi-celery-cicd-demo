@@ -53,7 +53,7 @@ jobs:
       
       - name: Pull latest images
         run: |
-          docker pull ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+          docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
          
       - name: Stop and remove existing containers if running
         run: |
@@ -62,8 +62,8 @@ jobs:
        
       - name: Run Celery Container
         run: |
-          docker run -d --name ${{ secrets.CELERY_CONTAINER }} --network=host ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest celery
+          docker run -d --name ${{ secrets.CELERY_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest celery
           
       - name: Run FastAPI Container
         run: |
-          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} --network=host ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
