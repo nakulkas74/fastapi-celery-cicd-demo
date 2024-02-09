@@ -71,6 +71,4 @@ jobs:
         run: |
           FASTAPI_PORT=$(grep "^FASTAPI_PORT=" .env | cut -d '=' -f2)
           echo "::set-output name=port::$FASTAPI_PORT"
-
-      - name: Get Runner IP
-        run: echo \"Hosted FastAPI URL: http://${{ runner.ip }}:${{ steps.read-port-variable.outputs.port }}\"
+          
