@@ -51,15 +51,19 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       
-      - name: Pull latest images
-        run: |
-          docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
-         
       - name: Stop and remove existing containers if running
         run: |
           docker ps -q --filter "name=${{ secrets.CELERY_CONTAINER }}" | grep -q . && docker stop ${{ secrets.CELERY_CONTAINER }} && docker rm -fv ${{ secrets.CELERY_CONTAINER }} || true
           docker ps -q --filter "name=${{ secrets.FASTAPI_CONTAINER }}" | grep -q . && docker stop ${{ secrets.FASTAPI_CONTAINER }} && docker rm -fv ${{ secrets.FASTAPI_CONTAINER }} || true
        
+      - name: Remove existing Docker images
+        run: |
+          docker images -q ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest | xargs -r docker rmi -f || true
+
+      - name: Pull latest images
+        run: |
+          docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
+         
       - name: Run Celery Container
         run: |
           docker run -d --name ${{ secrets.CELERY_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest celery
