@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "It's working!"}
+    return {"message": "server is on"}
 
 @app.post("/create_task/")
 async def create_task(expire_time: int, email_id: str):
