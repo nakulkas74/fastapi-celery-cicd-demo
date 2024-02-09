@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image
 on:
   push:
     branches:
-      - main  # or whatever branch you want to trigger the workflow on
+      - main 
 
 jobs:
   build-and-push-ecr-image:
@@ -66,10 +66,11 @@ jobs:
         run: |
           docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
          
-      - name: Run Celery Container
+      - name: Read FASTAPI_PORT variable from .env
+        id: read-port-variable
         run: |
-          docker run -d --name ${{ secrets.CELERY_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest celery
-          
-      - name: Run FastAPI Container
-        run: |
-          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
+          FASTAPI_PORT=$(grep "^FASTAPI_PORT=" .env | cut -d '=' -f2)
+          echo "::set-output name=port::$FASTAPI_PORT"
+
+      - name: Get Runner IP
+        run: echo "Hosted FastAPI URL: http://${{ runner.ip }}:${{ steps.read-port-variable.outputs.port }}"
