@@ -70,13 +70,14 @@ jobs:
         id: read-port-variable
         run: |
           FASTAPI_PORT=$(grep "^FASTAPI_PORT=" .env | cut -d '=' -f2)
-          echo "::set-output name=port::$FASTAPI_PORT"
+          echo "FASTAPI_PORT=${FASTAPI_PORT}" >> $GITHUB_ENV
 
       - name: Get server IP
+        id: get-server-ip
         run: |
           SERVER_IP=$(curl -s icanhazip.com)
-          echo "::set-output name=server_ip::$SERVER_IP"
+          echo "SERVER_IP=${SERVER_IP}" >> $GITHUB_ENV
 
       - name: Echo Full URL of FastAPI App
         run: |
-          echo "http://${{ steps.server_ip.outputs.server_ip }}:${{ steps.read-port-variable.outputs.port }}"
+          echo "http://${{ env.SERVER_IP }}:${{ env.FASTAPI_PORT }}"
