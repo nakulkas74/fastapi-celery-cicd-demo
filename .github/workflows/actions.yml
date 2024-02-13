@@ -74,7 +74,7 @@ jobs:
 
       - name: Run FastAPI Container
         run: |
-          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} -p ${{ env.FASTAPI_PORT }}:80 --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
+          docker run -d --name ${{ secrets.FASTAPI_CONTAINER }} --network=host ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.AWS_ECR_REPO }}:latest
 
       - name: Run Celery Container
         run: |
