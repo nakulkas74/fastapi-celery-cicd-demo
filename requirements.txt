@@ -6,3 +6,4 @@ redis==5.0.1
 python-dotenv==1.0.1
 send-mail==0.0.2
 flower==2.0.1
+pymongo==4.6.1
